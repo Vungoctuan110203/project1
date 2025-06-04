@@ -1,15 +1,15 @@
-#include <ESP8266WiFi.h>
+#include <WiFi.h>
 #include <String.h>
 #include <PubSubClient.h>
 #include "DHT.h"
 
-#define DHTPIN 14 
+#define DHTPIN 5
 #define DHTTYPE DHT11
-#define LDR A0
-#define pinOutLed1 5 // D1
-#define pinOutLed2 4 // D2
-#define wifi_ssid "PATE COT DEN"
-#define wifi_password "88888888"
+#define GAS 36 
+#define pinOutLed1 13 // D1
+#define pinOutLed2 15 // D2
+#define wifi_ssid "13 08 21"
+#define wifi_password "12345679"
 #define mqtt_server "broker.mqttdashboard.com"
 #define mqtt_user "thuy"
 #define mqtt_password "123456"
@@ -97,15 +97,14 @@ void loop() {
   }
   client.loop();
   delay(1000);
-  float hum = dht.readHumidity();
-  float temp = dht.readTemperature();    
-  float lux = analogRead(LDR);    
-  if (isnan(hum) || isnan(temp) || isnan(lux)) {
+  float hum = dht.readHumidity();  
+  float gas = analogRead(GAS);    
+  if (isnan(hum) || isnan(gas)) {
     Serial.println("Failed to read from sensor!");
     return;
   }
-  String msg = String(temp) + " " + String(hum) + " " + String(lux);   
+  String msg = String(gas) + " " + String(hum) ;   
   client.publish(topic, msg.c_str(), true);
   Serial.printf("Publishing on topic %s \n", topic);
-  Serial.printf("Message: %.2f %.2f %.2f\n", temp, hum, lux);
+  Serial.printf("Message: %.2f %.2f\n", gas, hum);
 }
